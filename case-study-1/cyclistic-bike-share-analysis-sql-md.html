@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>case-study-1</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="cyclistic-bike-share-analysis">Cyclistic Bike-Share Analysis</h1>
+<p><strong>Author:</strong> Yoshni<br>
+<strong>Date:</strong> 2025-03-19</p>
+<h2 id="data-cleaning">Data Cleaning</h2>
+<h3 id="remove-missing-values">1. Remove Missing Values</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> 
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>cyclistic_dataset<span class="token punctuation">.</span>cyclistic<span class="token operator">-</span>trips<span class="token punctuation">`</span>
+<span class="token keyword">WHERE</span> start_time <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> 
+<span class="token operator">AND</span> end_time <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span>
+<span class="token operator">AND</span> ride_length <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span>
+<span class="token operator">AND</span> usertype <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="extract-components">2. Extract Components</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> 
+  <span class="token operator">*</span><span class="token punctuation">,</span> 
+  EXTRACT<span class="token punctuation">(</span>HOUR <span class="token keyword">FROM</span> start_time<span class="token punctuation">)</span> <span class="token keyword">AS</span> ride_hour<span class="token punctuation">,</span>
+  EXTRACT<span class="token punctuation">(</span>YEAR <span class="token keyword">FROM</span> start_time<span class="token punctuation">)</span> <span class="token keyword">AS</span> ride_year
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>cyclistic_dataset<span class="token punctuation">.</span>cyclistic<span class="token operator">-</span>trips<span class="token punctuation">`</span><span class="token punctuation">;</span>
+</code></pre>
+<div></div>
+<h2 id="data-visualization">Data Visualization</h2>
+<h3 id="total-number-of-rides-per-month">1. Total Number of Rides per Month</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> 
+  FORMAT_TIMESTAMP<span class="token punctuation">(</span><span class="token string">'%Y-%m'</span><span class="token punctuation">,</span> start_time<span class="token punctuation">)</span> <span class="token keyword">AS</span> month<span class="token punctuation">,</span> 
+  usertype<span class="token punctuation">,</span> 
+  <span class="token function">COUNT</span><span class="token punctuation">(</span>trip_id<span class="token punctuation">)</span> <span class="token keyword">AS</span> total_rides
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>cyclistic_dataset<span class="token punctuation">.</span>cyclistic<span class="token operator">-</span>trips<span class="token punctuation">`</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> month<span class="token punctuation">,</span> usertype
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> month<span class="token punctuation">,</span> usertype<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="average-ride-duration-by-age-group">2. Average Ride Duration by Age Group</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> 
+  <span class="token keyword">CASE</span> 
+    <span class="token keyword">WHEN</span> birthyear <span class="token operator">&gt;=</span> <span class="token number">2000</span> <span class="token keyword">THEN</span> <span class="token string">'Gen Z'</span>
+    <span class="token keyword">WHEN</span> birthyear <span class="token operator">BETWEEN</span> <span class="token number">1980</span> <span class="token operator">AND</span> <span class="token number">1999</span> <span class="token keyword">THEN</span> <span class="token string">'Millennials'</span>
+    <span class="token keyword">WHEN</span> birthyear <span class="token operator">BETWEEN</span> <span class="token number">1965</span> <span class="token operator">AND</span> <span class="token number">1979</span> <span class="token keyword">THEN</span> <span class="token string">'Gen X'</span>
+    <span class="token keyword">ELSE</span> <span class="token string">'Baby Boomers'</span>
+  <span class="token keyword">END</span> <span class="token keyword">AS</span> age_group<span class="token punctuation">,</span>
+  usertype<span class="token punctuation">,</span>  
+  <span class="token function">AVG</span><span class="token punctuation">(</span>TIME_DIFF<span class="token punctuation">(</span>TIME <span class="token string">'00:00:00'</span><span class="token punctuation">,</span> ride_length<span class="token punctuation">,</span> SECOND<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token operator">-</span><span class="token number">60</span><span class="token punctuation">)</span> <span class="token keyword">AS</span> avg_ride_length_minutes
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>cyclistic_dataset<span class="token punctuation">.</span>cyclistic<span class="token operator">-</span>trips<span class="token punctuation">`</span>
+<span class="token keyword">WHERE</span> birthyear <span class="token operator">IS</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> age_group<span class="token punctuation">,</span> usertype
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> avg_ride_length_minutes <span class="token keyword">DESC</span><span class="token punctuation">;</span>
+</code></pre>
+</div>
+</body>
+
+</html>
