@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>case-study-2</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="bellabeat-data-analysis">Bellabeat Data Analysis</h1>
+<p><strong>Author:</strong> Yoshni<br>
+<strong>Date:</strong> 2025-03-22</p>
+<h2 id="data-cleaning">Data Cleaning</h2>
+<h3 id="remove-duplicates">1. Remove Duplicates</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> <span class="token operator">*</span> 
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>daily<span class="token operator">-</span>activity<span class="token punctuation">`</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> <span class="token operator">*</span> 
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>sleep<span class="token operator">-</span>day<span class="token punctuation">`</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="check-for-missing-values">2. Check for Missing Values</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> 
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>TotalSteps<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingSteps<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>Calories<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingCalories<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>VeryActiveMinutes<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingVeryActive<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>FairlyActiveMinutes<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingFairlyActive<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>LightlyActiveMinutes<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingLightlyActive<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>SedentaryMinutes<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingSedentary
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>daily<span class="token operator">-</span>activity<span class="token punctuation">`</span><span class="token punctuation">;</span>
+
+<span class="token keyword">SELECT</span> 
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>TotalMinutesAsleep<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingMinutesAsleep<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>TotalTimeInBed<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingTimeInBed<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>TotalSleepHours<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingSleepHours<span class="token punctuation">,</span>
+    <span class="token function">COUNT</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">COUNT</span><span class="token punctuation">(</span>SleepEfficiency<span class="token punctuation">)</span> <span class="token keyword">AS</span> MissingEfficiency
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>sleep<span class="token operator">-</span>day<span class="token punctuation">`</span><span class="token punctuation">;</span>
+</code></pre>
+<div></div>
+<h2 id="data-visualization">Data Visualization</h2>
+<h3 id="average-steps-per-user">1. Average Steps per User</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> Id<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span>TotalSteps<span class="token punctuation">)</span> <span class="token keyword">AS</span> AvgSteps
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>daily<span class="token operator">-</span>activity<span class="token punctuation">`</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> Id<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="sleep-vs-activity-comparison">2. Sleep vs Activity Comparison</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> <span class="token number">a</span><span class="token punctuation">.</span>Id<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span><span class="token number">a</span><span class="token punctuation">.</span>TotalSteps<span class="token punctuation">)</span> <span class="token keyword">AS</span> AvgSteps<span class="token punctuation">,</span> <span class="token function">AVG</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>TotalSleepHours<span class="token punctuation">)</span> <span class="token keyword">AS</span> AvgSleep
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>daily<span class="token operator">-</span>activity<span class="token punctuation">`</span> <span class="token number">a</span>
+<span class="token keyword">JOIN</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>sleep<span class="token operator">-</span>day<span class="token punctuation">`</span> s
+<span class="token keyword">ON</span> <span class="token number">a</span><span class="token punctuation">.</span>Id <span class="token operator">=</span> s<span class="token punctuation">.</span>Id
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> <span class="token number">a</span><span class="token punctuation">.</span>Id<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="step-count-by-day-of-the-week">3. Step Count by Day of the Week</h3>
+<pre class=" language-sql"><code class="prism  language-sql"><span class="token keyword">SELECT</span> 
+    FORMAT_DATE<span class="token punctuation">(</span><span class="token string">'%A'</span><span class="token punctuation">,</span> ActivityDate<span class="token punctuation">)</span> <span class="token keyword">AS</span> DayOfWeek<span class="token punctuation">,</span>
+    <span class="token function">AVG</span><span class="token punctuation">(</span>TotalSteps<span class="token punctuation">)</span> <span class="token keyword">AS</span> AvgSteps
+<span class="token keyword">FROM</span> <span class="token punctuation">`</span><span class="token keyword">case</span><span class="token operator">-</span>studies<span class="token operator">-</span>yosh<span class="token punctuation">.</span>bellabeat<span class="token punctuation">.</span>daily<span class="token operator">-</span>activity<span class="token punctuation">`</span>
+<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> DayOfWeek
+<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 
+    <span class="token keyword">CASE</span> 
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Monday'</span> <span class="token keyword">THEN</span> <span class="token number">1</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Tuesday'</span> <span class="token keyword">THEN</span> <span class="token number">2</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Wednesday'</span> <span class="token keyword">THEN</span> <span class="token number">3</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Thursday'</span> <span class="token keyword">THEN</span> <span class="token number">4</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Friday'</span> <span class="token keyword">THEN</span> <span class="token number">5</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Saturday'</span> <span class="token keyword">THEN</span> <span class="token number">6</span>
+        <span class="token keyword">WHEN</span> DayOfWeek <span class="token operator">=</span> <span class="token string">'Sunday'</span> <span class="token keyword">THEN</span> <span class="token number">7</span>
+    <span class="token keyword">END</span><span class="token punctuation">;</span>
+
+
+</code></pre>
+</div>
+</body>
+
+</html>
